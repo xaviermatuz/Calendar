@@ -1,0 +1,6 @@
+{
+    "name": "telesoft/calendar",
+    "require": {
+        "dcblogdev/pdo-wrapper": "^2.0"
+    }
+}

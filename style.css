@@ -1,0 +1,139 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-size: 14px;
+} /* Set basic style for the body */
+
+#calendar {
+  max-width: 90%;
+  margin: 2.5em auto;
+} /* Set the max width and spaces for the calendar over Top/Bottom body position */
+
+#top {
+  background: #eee;
+  border-bottom: 1px solid #ddd;
+  padding: 0 10px;
+  line-height: 40px;
+  font-size: 12px;
+} /* Set the position and style for the div container */
+
+.timezone {
+  float: right;
+} /* Set the position to the top div */
+
+/* Override personalization of the calendar for Desktop view Star */
+div#calendar div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr .fc-button,
+.fc-toolbar-title,
+.fc-scrollgrid-section-header,
+.fc-list-table {
+  text-transform: capitalize;
+} /* Set the first letter Uppercase for all the contollers available */
+
+.fc-timegrid-event .fc-event-resizer {
+  color: #fff;
+  text-align: center;
+  font-family: monospace;
+} /* Set the position and style for the control */
+
+.fc-timegrid-event:hover .fc-event-resizer:after {
+  content: "=";
+  display: inline-block;
+  vertical-align: top;
+  line-height: 0px;
+} /* Set the type and position */
+/* Override personalization of the calendar for Desktop view End */
+
+/* Override personalization of the calendar for Mobiles Start */
+@media only screen and (min-width: 280px) and (max-width: 767px) {
+  .fc-toolbar.fc-header-toolbar {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-left {
+    order: 3;
+    text-align: center;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-center {
+    order: 1;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-right {
+    order: 2;
+  }
+  /* Start of scroller activation and resizing */
+  .fc-scroller {
+    overflow-x: auto !important;
+  } /* Set the container of the header to overflow on mobiles */
+  .fc-col-header {
+    width: 768px !important;
+  } /* Set fixed width for the header */
+  .fc-timeGridDay-view .fc-col-header {
+    width: 100% !important;
+  } /* Set full width for the header on control class */
+  .fc-daygrid-body,
+  .fc-daygrid-body-balanced,
+  .fc-scrollgrid-sync-table {
+    width: 768px !important;
+  } /* Set fixed width for the month container */
+  .fc-timegrid-body,
+  .fc-timegrid-slots table,
+  .fc-timegrid-cols table {
+    width: 100% !important;
+  } /* Set full width for the week container */
+  .fc-timeGridWeek-view .fc-timegrid-slots table,
+  .fc-timeGridWeek-view .fc-timegrid-cols table {
+    width: 768px !important;
+  } /* Set the width of the table contained in week to a fix value of the overall device width */
+  .fc-timeGridDay-view .fc-timegrid-slots table,
+  .fc-timeGridDay-view .fc-timegrid-cols table {
+    width: 100% !important;
+  } /* Set the width of the table contained in Day to the full device width */
+  
+} /* Set the controlers to be flexible on resize for mobile devices general*/
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .container {
+    max-width: 960px !important;
+  } /* Set the Width */
+  .fc-scroller {
+    overflow-x: auto !important;
+  } /* Set the container of the header to overflow on mobiles */
+  .fc-dayGridMonth-view .fc-col-header {
+    width: 960px !important;
+  } /* Set full width for the header */
+  .fc-col-header {
+    width: 100% !important;
+  } /* Set full width for the header */
+  .fc-daygrid-body,
+  .fc-daygrid-body-balanced,
+  .fc-scrollgrid-sync-table {
+    width: 960px !important;
+  } /* Set fixed width for the month container */
+} /* Set the controlers to be flexible on resize for mobile devices with weird resolution 768 to 991*/
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    max-width: 1140px !important;
+  } /* Set the type and position */
+  .fc-scroller {
+    overflow-x: auto !important;
+  } /* Set the container of the header to overflow on mobiles */
+  .fc-dayGridMonth-view .fc-col-header {
+    width: 1140px !important;
+  } /* Set full width for the header */
+  .fc-col-header,
+  .fc-timegrid-body {
+    width: 100% !important;
+  } /* Set full width for the header */
+  .fc-daygrid-body,
+  .fc-daygrid-body-balanced,
+  .fc-scrollgrid-sync-table {
+    width: 1140px !important;
+  } /* Set fixed width for the month container */
+  .fc-daygrid-event > .fc-event-title {
+    white-space: inherit !important;
+  } /* Added so titles arent cut off */
+} /* Set the controlers to be flexible on resize for mobile devices with laptop and some tablets resolution 992 to 1199 */
+/* Override personalization of the calendar for Mobiles End */
