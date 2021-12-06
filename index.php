@@ -232,6 +232,7 @@
 <!-- Load Script -->
 <script>
     var eles = document.getElementsByClassName('fc-scroller'); //Search for the class contained in Header/Body of the table
+    var mas = document.getElementsByClassName('fc-daygrid-more-link'); //Search for the class contained in Header/Body of the table    
     var botones = document.getElementsByClassName('fc-button'); //Search for the button classes
     window.addEventListener('load', function callendarscroll() {
         console.log("INDEX SCRIPT");
@@ -266,15 +267,15 @@
             //CARRY ON NOTHING TO DO HERE
         }
         // --------
-        b0 = botones[0].setAttribute("id", "b0"); /* Set the id to PrevYear Button */
-        b1 = botones[1].setAttribute("id", "b1"); /* Set the id to PrevMonth Button */
-        b2 = botones[2].setAttribute("id", "b2"); /* Set the id to NextMonth Button */
-        b3 = botones[3].setAttribute("id", "b3"); /* Set the id to NextYear Button */
-        b4 = botones[4].setAttribute("id", "b4"); /* Set the id to Today Button */
-        b5 = botones[5].setAttribute("id", "b5"); /* Set the id to the Month button */
-        b6 = botones[6].setAttribute("id", "b6"); /* Set the id to the Week button */
-        b7 = botones[7].setAttribute("id", "b7"); /* Set the id to the Day button */
-        b8 = botones[8].setAttribute("id", "b8"); /* Set the id to the List button */
+        for (let index = 0; index < mas.length; index++) {
+            mas[index].setAttribute("id", "pop"); /* Set the id to more link in table */
+            console.log(mas[index]);
+        }
+        // --------
+        for (let index = 0; index < botones.length; index++) {
+            botones[index].setAttribute("id", "b" + index);
+            /* Set the id to PrevYear, PrevMonth, NextMonth, NextYear, Today, Month, Week, Day and List button */
+        }
         // --------
         document.getElementById("b5").onclick = callendarscroll; /* Set the onclick event to the Month button */
         document.getElementById("b6").onclick = callendarscroll; /* Set the onclick event to the Week button */
@@ -296,115 +297,78 @@
         }
         // --------        
         if (class_div_container.classList.contains("fc-daygrid")) { // Month View
-            console.log(class_div_container);
-            // --------
-            document.getElementById("b0").onclick = myinterval; /* Set the onclick event to PrevYear Button */
-            document.getElementById("b1").onclick = myinterval; /* Set the onclick event to PrevMonth Button */
-            document.getElementById("b2").onclick = myinterval; /* Set the onclick event to NextMonth Button */
-            document.getElementById("b3").onclick = myinterval; /* Set the onclick event to NextYear Button */
-            document.getElementById("b4").onclick = myinterval; /* Set the onclick event to Today Button */
-            // --------
-            console.log("ESTA LLAMANDO INDEX HIDEURL DAYGRID|||||||||");
-            var anchor_Handler = document.getElementsByClassName("fc-daygrid-event");
-            setTimeout(function() {
-                console.log("ESTA LLAMANDO INDEX HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
-                for (var en = 0; en < anchor_Handler.length; en++) {
-                    if (anchor_Handler[en].href != "" && anchor_Handler[en].href != null) {
-                        anchor_Handler[en].setAttribute("hiddenhref", anchor_Handler[en].href);
-                        anchor_Handler[en].removeAttribute("href");
+            try {
+                // --------
+                document.getElementById("b0").onclick = myinterval; /* Set the onclick event to PrevYear Button */
+                document.getElementById("b1").onclick = myinterval; /* Set the onclick event to PrevMonth Button */
+                document.getElementById("b2").onclick = myinterval; /* Set the onclick event to NextMonth Button */
+                document.getElementById("b3").onclick = myinterval; /* Set the onclick event to NextYear Button */
+                document.getElementById("b4").onclick = myinterval; /* Set the onclick event to Today Button */
+                document.getElementById("pop").onclick = myinterval; /* Set the onclick event to the pop button */
+                // --------
+                console.log("-INDEX HIDEURL DAYGRID");
+                var anchor_Handler = document.getElementsByClassName("fc-daygrid-event");
+                setTimeout(function() {
+                    console.log("--INDEX HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
+                    for (var en = 0; en < anchor_Handler.length; en++) {
+                        if (anchor_Handler[en].href != "" && anchor_Handler[en].href != null) {
+                            anchor_Handler[en].setAttribute("hiddenhref", anchor_Handler[en].href);
+                            anchor_Handler[en].removeAttribute("href");
+                        }
                     }
-                }
-            }, 13);
+                }, 15);
+            } catch (err) {
+                console.log(err.message);
+            }
         } else if (class_div_container.classList.contains("fc-timegrid")) { // Week and Day View
-            console.log(class_div_container);
-            // --------
-            document.getElementById("b0").onclick = callendarscroll; /* Set the onclick event to PrevYear Button */
-            document.getElementById("b1").onclick = callendarscroll; /* Set the onclick event to PrevMonth Button */
-            document.getElementById("b2").onclick = callendarscroll; /* Set the onclick event to NextMonth Button */
-            document.getElementById("b3").onclick = callendarscroll; /* Set the onclick event to NextYear Button */
-            document.getElementById("b4").onclick = callendarscroll; /* Set the onclick event to Today Button */
-            // --------
-            console.log("ESTA LLAMANDO INDEX HIDEURL EVENT|||||||||");
-            var anchor_Handler = document.getElementsByClassName("fc-timegrid-event");
-            setTimeout(function() {
-                console.log("ESTA LLAMANDO INDEX HIDEURL TIMEGRID-----ENTRA A INDEX HIDEURL|||||||||");
-                for (var en = 0; en < anchor_Handler.length; en++) {
-                    if (anchor_Handler[en].href != "" && anchor_Handler[en].href != null) {
-                        anchor_Handler[en].setAttribute("hiddenhref", anchor_Handler[en].href);
-                        anchor_Handler[en].removeAttribute("href");
+            try {
+                // --------
+                document.getElementById("b0").onclick = callendarscroll; /* Set the onclick event to PrevYear Button */
+                document.getElementById("b1").onclick = callendarscroll; /* Set the onclick event to PrevMonth Button */
+                document.getElementById("b2").onclick = callendarscroll; /* Set the onclick event to NextMonth Button */
+                document.getElementById("b3").onclick = callendarscroll; /* Set the onclick event to NextYear Button */
+                document.getElementById("b4").onclick = callendarscroll; /* Set the onclick event to Today Button */
+                // --------
+                console.log("-INDEX HIDEURL EVENT|||||||||");
+                var anchor_Handler = document.getElementsByClassName("fc-timegrid-event");
+                setTimeout(function() {
+                    console.log("--INDEX HIDEURL TIMEGRID-----ENTRA A INDEX HIDEURL|||||||||");
+                    for (var en = 0; en < anchor_Handler.length; en++) {
+                        if (anchor_Handler[en].href != "" && anchor_Handler[en].href != null) {
+                            anchor_Handler[en].setAttribute("hiddenhref", anchor_Handler[en].href);
+                            anchor_Handler[en].removeAttribute("href");
+                        }
                     }
-                }
-            }, 13);
+                }, 15);
+            } catch (err) {
+                console.log(err.message);
+            }
         } else { // No View
-            console.log("ESTA LLAMANDO INDEX HIDEURL EVENT|||||||||");
-            let enlaces = document.getElementsByTagName('a')
-            setTimeout(function() {
-                for (let en = 0; en < enlaces.length; en++) {
-                    if (enlaces[en].href != "") {
-                        enlaces[en].setAttribute(
-                            "hiddenhref",
-                            enlaces[en].getAttribute("href")
-                        );
-                        enlaces[en].setAttribute("href", "");
-                        console.log(enlaces[en]);
-                    } else {
-                        //CARRY ON NOTHING TO DO HERE
+            try {
+                console.log("ESTA LLAMANDO INDEX HIDEURL EVENT|||||||||");
+                let enlaces = document.getElementsByTagName('a')
+                setTimeout(function() {
+                    for (let en = 0; en < enlaces.length; en++) {
+                        if (enlaces[en].href != "") {
+                            enlaces[en].setAttribute(
+                                "hiddenhref",
+                                enlaces[en].getAttribute("href")
+                            );
+                            enlaces[en].setAttribute("href", "");
+                        } else {
+                            //CARRY ON NOTHING TO DO HERE
+                        }
                     }
-                }
-            }, 13);
+                }, 13);
+            } catch (err) {
+                console.log(err.message);
+            }
         }
     })
 </script>
 <!-- / .Load Script -->
 
-<!-- Myinterval Function Script -->
-<script>
-    // Function to hide the URL's in the table
-    function myinterval() {
-        console.log("INDEX SCRIPT MY INTERVAL");
-        const class_div_container = document.querySelector(".fc-view");
-        console.log(class_div_container);
-        if (class_div_container.classList.contains("fc-daygrid")) {
-            console.log("ESTA LLAMANDO HIDEURL DAYGRID");
-            var anchorclass = document.getElementsByClassName("fc-daygrid-event");
-            setTimeout(function() {
-                console.log("ESTA LLAMANDO HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
-                var anchorclass = document.getElementsByClassName("fc-daygrid-event");
-                for (var en = 0; en < anchorclass.length; en++) {
-                    if (anchorclass[en].href != "" && anchorclass[en].href != null) {
-                        anchorclass[en].setAttribute("hiddenhref", anchorclass[en].href);
-                        anchorclass[en].removeAttribute("href");
-                    }
-                }
-            }, 13);
-        } else if (class_div_container.classList.contains("fc-timegrid")) {
-            var anchorclass = document.getElementsByClassName("fc-timegrid-event");
-            setTimeout(function() {
-                console.log("ESTA LLAMANDO HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
-                var anchorclass = document.getElementsByClassName("fc-daygrid-event");
-                for (var en = 0; en < anchorclass.length; en++) {
-                    if (anchorclass[en].href != "" && anchorclass[en].href != null) {
-                        anchorclass[en].setAttribute("hiddenhref", anchorclass[en].href);
-                        anchorclass[en].removeAttribute("href");
-                    }
-                }
-            }, 13);
-        } else {
-            console.log("ESTA LLAMANDO HIDEURL LIST-----ESTA LLAMANDO HIDEURL EVENT");
-            let listanchorclass = document.getElementsByClassName("fc-event-forced-url");
-            setTimeout(function() {
-                for (let en = 0; en < listanchorclass.length; en++) {
-                    listanchorclass[en].children[2].children[0].setAttribute(
-                        "hiddenhref",
-                        listanchorclass[en].children[2].children[0].getAttribute("href")
-                    );
-                    listanchorclass[en].children[2].children[0].removeAttribute("href");
-                }
-            }, 13);
-        }
-    }
-</script>
-<!-- / .Myinterval Function Load Script -->
+<script src='<?= $dir; ?>Myinterval.js'></script>
 <script src='<?= $dir; ?>packages/datepicker/datepicker.js'></script>
 <script src='<?= $dir; ?>packages/colorpicker/bootstrap-colorpicker.min.js'></script>
 <script src='<?= $dir; ?>lib/locales-all.min.js'></script>

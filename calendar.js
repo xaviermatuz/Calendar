@@ -1,28 +1,91 @@
+setCookie("vpbx_user_locale", "en_US", 1);
+setCookie("tz", "America%2FManagua", 1);
+
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toGMTString();
+  document.cookie =
+    cname + "=" + cvalue + ";" + expires + ";path=/" + ";" + "SameSite=Lax;";
+}
+//Eliminar despues de las pruebas
 document.addEventListener("DOMContentLoaded", function () {
   //Path to root for ez variable declaration
   var url = "./";
-
-  var initialLocaleCode = "en"; //Initial locale code for the calendar to render
-  var initialTimeZone = "local"; //Initial timezone for the calendar to render
   var localeSelectorEl = document.getElementById("locale-selector"); //Assign from the view to the js controler of the locale selector
   var timeZoneSelectorEl = document.getElementById("time-zone-selector"); //Assign from the view to the js controler of the timezone selector
   var eR_DateLocal = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}/; //RegEx used to validate the date on local format with ISO8086 "YYYY-MM-DDTHH:MM:SS-GMT"
   var eR_DateUTC = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/; //RegEx used to validate the date on UTC format with ISO8086 "YYYY-MM-DDTHH:MM:SSZ"
 
+  if (getCookie("tz") != "UTC") {
+    var initialTimeZone = "local"; //Initial timezone for the calendar to render
+  } else {
+    var initialTimeZone = "UTC"; //Initial timezone for the calendar to render
+  }
+  //-----Could be improved-----↕
+  if (getCookie("Calendar_Locale") != "") {
+    var initialLocaleCode = getCookie("Calendar_Locale"); //Initial locale code for the calendar to render, format "xx"
+  } else if (
+    getCookie("Calendar_Locale") == "" ||
+    typeof getCookie("Calendar_Locale") == "undefined"
+  ) {
+    var initialLocaleCode = getCookie("vpbx_user_locale").split("_")[0]; //Initial locale code for the calendar to render, original format "xx_XX"
+  } else {
+    var initialLocaleCode = "en"; //Initial locale code to render, fallback if no parameter is present
+  }
+  //-----Could be improved-----↕
+
   // Function to hide the URL'S in the table
   function hideurl_timeout_interval() {
     const class_div_container = document.querySelector(".fc-view");
     if (class_div_container.classList.contains("fc-daygrid")) {
-      var anchorclass = document.getElementsByClassName("fc-daygrid-event");
-      setTimeout(function () {
-        console.log("CALENDAR SCRIPT MY INTERVAL MONTH");
-        for (var en = 0; en < anchorclass.length; en++) {
-          if (anchorclass[en].href != "" && anchorclass[en].href != null) {
-            anchorclass[en].setAttribute("hiddenhref", anchorclass[en].href);
-            anchorclass[en].removeAttribute("href");
+      try {
+        var anchorclass = document.getElementsByClassName("fc-daygrid-event");
+        setTimeout(function () {
+          console.log("CALENDAR SCRIPT MY INTERVAL MONTH");
+          for (var en = 0; en < anchorclass.length; en++) {
+            if (anchorclass[en].href != "" && anchorclass[en].href != null) {
+              anchorclass[en].setAttribute("hiddenhref", anchorclass[en].href);
+              anchorclass[en].removeAttribute("href");
+            }
           }
+        }, 34);
+        for (let index = 0; index < mas.length; index++) {
+          mas[index].setAttribute(
+            "id",
+            "pop"
+          ); /* Set the id to all more links on the table */
         }
-      }, 34);
+        //PARA EL POPOVER LA PRIMER LLAMADA NO LA HACE VERIFICAR OTRO DIA
+        const class_div_container_popover =
+          document.querySelector(".fc-view-harness"); //Search for the main class fc-more-popover
+        if (class_div_container_popover.classList.contains("fc-popover")) {
+          let anchor_Handler_pop =
+            document.getElementsByClassName("fc-daygrid-event");
+          setTimeout(function () {
+            console.log(
+              "ESTA LLAMANDO INDEX HIDEURL POPOVER-----ENTRA A INDEX HIDEURL|||||||||"
+            );
+            for (var en = 0; en < anchor_Handler_pop.length; en++) {
+              if (
+                anchor_Handler_pop[en].href != "" &&
+                anchor_Handler_pop[en].href != null
+              ) {
+                anchor_Handler_pop[en].setAttribute(
+                  "hiddenhref",
+                  anchor_Handler_pop[en].href
+                );
+                anchor_Handler_pop[en].removeAttribute("href");
+              }
+            }
+          }, 15);
+        } else {
+          //CARRY ON DO NOTHING
+        }
+        //PARA EL POPOVER LA PRIMER LLAMADA NO LA HACE VERIFICAR OTRO DIA FINAL
+      } catch (err) {
+        console.log(err.message);
+      }
     } else if (class_div_container.classList.contains("fc-timegrid")) {
       var anchorclass = document.getElementsByClassName("fc-timegrid-event");
       setTimeout(function () {
@@ -125,6 +188,9 @@ document.addEventListener("DOMContentLoaded", function () {
     weekNumbers: true, //Display the week number on months
     weekNumberCalculation: "local", //If ISO is selected, changes the value of firstDay to Monday (ISO8601) else use locale-specific
     navLinks: true, // Can click day/week names to navigate views
+    // navLinkDayClick: function (date) {
+    //   console.log("day", date.toISOString());
+    // },
     dayMaxEvents: true, // Allow "more" link when too many events displaying popup
     nowIndicator: true, //Whether or not to display a marker indicating the current time
     fixedWeekCount: false, //Determines the number of weeks displayed in a month 4,5,6 weeks, if false always 6
@@ -324,6 +390,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (this.value) {
       calendar.setOption("locale", this.value); //Change the render based on the options created before
       document.documentElement.setAttribute("lang", this.value); //Call to change the lang tag in the html
+      setCookie("Calendar_Locale", this.value, 1);
     }
     hideurl_timeout_interval(); //Call to Timeout function to Hide URL's
   }); // When the selected option changes, dynamically change the calendar option Locales
@@ -332,6 +399,22 @@ document.addEventListener("DOMContentLoaded", function () {
     calendar.setOption("timeZone", this.value);
     hideurl_timeout_interval(); //Call to Timeout function to Hide URL's
   }); // When the timezone selector changes, dynamically change the calendar option TimeZones
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
   $("#createEvent").submit(function (event) {
     event.preventDefault(); // Stop the form from refreshing the page

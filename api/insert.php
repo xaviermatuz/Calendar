@@ -18,17 +18,17 @@ if (isset($_POST['title'])) {
     if ($start == '') {
         $error['start'] = 'Start date is required';
     }
-    if ($end == '' ) {
+    if ($end == '') {
         $error['end'] = 'End date is required';
     }
 
     //If there are no errors, carry on
-    if (! isset($error)) {
+    if (!isset($error)) {
 
         //Format date
         $start = date('Y-m-d H:i:s', strtotime($start));
         $end = date('Y-m-d H:i:s', strtotime($end));
-        
+
         $data['success'] = true;
         $data['message'] = 'Success!';
 
@@ -41,7 +41,6 @@ if (isset($_POST['title'])) {
             'text_color'  => $text_color
         ];
         $db->insert('events', $insert);
-      
     } else {
 
         $data['success'] = false;
@@ -49,5 +48,4 @@ if (isset($_POST['title'])) {
     }
 
     echo json_encode($data);
-    
 }

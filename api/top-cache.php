@@ -36,5 +36,3 @@ if($cache_enable==1)
 
 
 }
-
-?>
