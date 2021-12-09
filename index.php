@@ -267,11 +267,6 @@
             //CARRY ON NOTHING TO DO HERE
         }
         // --------
-        for (let index = 0; index < mas.length; index++) {
-            mas[index].setAttribute("id", "pop"); /* Set the id to more link in table */
-            console.log(mas[index]);
-        }
-        // --------
         for (let index = 0; index < botones.length; index++) {
             botones[index].setAttribute("id", "b" + index);
             /* Set the id to PrevYear, PrevMonth, NextMonth, NextYear, Today, Month, Week, Day and List button */
@@ -304,7 +299,6 @@
                 document.getElementById("b2").onclick = myinterval; /* Set the onclick event to NextMonth Button */
                 document.getElementById("b3").onclick = myinterval; /* Set the onclick event to NextYear Button */
                 document.getElementById("b4").onclick = myinterval; /* Set the onclick event to Today Button */
-                document.getElementById("pop").onclick = myinterval; /* Set the onclick event to the pop button */
                 // --------
                 console.log("-INDEX HIDEURL DAYGRID");
                 var anchor_Handler = document.getElementsByClassName("fc-daygrid-event");
@@ -315,6 +309,15 @@
                             anchor_Handler[en].setAttribute("hiddenhref", anchor_Handler[en].href);
                             anchor_Handler[en].removeAttribute("href");
                         }
+                    }
+                    for (let index = 0; index < mas.length; index++) {
+                        mas[index].setAttribute("id", "pop"); /* Set the id to more link in table */
+                        console.log(mas[index]);
+                    }
+                    if (document.getElementById("pop") != null) {
+                        document.getElementById("pop").onclick = popinterval;
+                    } else {
+                        //CARRY ON DO NOTHING
                     }
                 }, 15);
             } catch (err) {
@@ -368,7 +371,7 @@
 </script>
 <!-- / .Load Script -->
 
-<script src='<?= $dir; ?>Myinterval.js'></script>
+<script src='<?= $dir; ?>My_interval.js'></script>
 <script src='<?= $dir; ?>packages/datepicker/datepicker.js'></script>
 <script src='<?= $dir; ?>packages/colorpicker/bootstrap-colorpicker.min.js'></script>
 <script src='<?= $dir; ?>lib/locales-all.min.js'></script>
