@@ -20,7 +20,7 @@
     <script src='<?= $dir; ?>packages/jquery/jquery-3.6.0.min.js'></script>
     <script src='<?= $dir; ?>packages/jqueryui/jquery-ui.min.js'></script>
     <script src='<?= $dir; ?>packages/bootstrap/js/bootstrap.min.js'></script>
-    <script src='<?= $dir; ?>calendar.js'></script>
+    <script src='<?= $dir; ?>Calendar.js'></script>
 </head>
 
 <body>
@@ -294,11 +294,11 @@
         if (class_div_container.classList.contains("fc-daygrid")) { // Month View
             try {
                 // --------
-                document.getElementById("b0").onclick = myinterval; /* Set the onclick event to PrevYear Button */
-                document.getElementById("b1").onclick = myinterval; /* Set the onclick event to PrevMonth Button */
-                document.getElementById("b2").onclick = myinterval; /* Set the onclick event to NextMonth Button */
-                document.getElementById("b3").onclick = myinterval; /* Set the onclick event to NextYear Button */
-                document.getElementById("b4").onclick = myinterval; /* Set the onclick event to Today Button */
+                document.getElementById("b0").onclick = myInterval; /* Set the onclick event to PrevYear Button */
+                document.getElementById("b1").onclick = myInterval; /* Set the onclick event to PrevMonth Button */
+                document.getElementById("b2").onclick = myInterval; /* Set the onclick event to NextMonth Button */
+                document.getElementById("b3").onclick = myInterval; /* Set the onclick event to NextYear Button */
+                document.getElementById("b4").onclick = myInterval; /* Set the onclick event to Today Button */
                 // --------
                 console.log("-INDEX HIDEURL DAYGRID");
                 var anchor_Handler = document.getElementsByClassName("fc-daygrid-event");
@@ -312,13 +312,10 @@
                     }
                     for (let index = 0; index < mas.length; index++) {
                         mas[index].setAttribute("id", "pop"); /* Set the id to more link in table */
-                        console.log(mas[index]);
                     }
                     if (document.getElementById("pop") != null) {
                         document.getElementById("pop").onclick = popinterval;
-                    } else {
-                        //CARRY ON DO NOTHING
-                    }
+                    } else {} //CARRY ON DO NOTHING
                 }, 15);
             } catch (err) {
                 console.log(err.message);
@@ -358,9 +355,7 @@
                                 enlaces[en].getAttribute("href")
                             );
                             enlaces[en].setAttribute("href", "");
-                        } else {
-                            //CARRY ON NOTHING TO DO HERE
-                        }
+                        } else {} //CARRY ON NOTHING TO DO HERE
                     }
                 }, 13);
             } catch (err) {
@@ -371,7 +366,6 @@
 </script>
 <!-- / .Load Script -->
 
-<script src='<?= $dir; ?>My_interval.js'></script>
 <script src='<?= $dir; ?>packages/datepicker/datepicker.js'></script>
 <script src='<?= $dir; ?>packages/colorpicker/bootstrap-colorpicker.min.js'></script>
 <script src='<?= $dir; ?>lib/locales-all.min.js'></script>
