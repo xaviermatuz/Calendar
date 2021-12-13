@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 changeYear: true,
                 dateFormat: "yy-mm-dd",
                 timeFormat: "HH:mm:ss",
-                yearRange: "1900:+10",
+                yearRange: "2021:+100",
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 showOn: "focus",
@@ -433,6 +433,7 @@ function myInterval() {
     if (class_div_container.classList.contains("fc-daygrid")) {
         try {
             setTimeout(function () {
+                console.log("INDEX SCRIPT MY INTERVAL");
                 console.log("--HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
                 let anchorclass = document.getElementsByClassName("fc-daygrid-event");
                 for (var en = 0; en < anchorclass.length; en++) {
@@ -455,6 +456,7 @@ function myInterval() {
         }
     } else if (class_div_container.classList.contains("fc-timegrid")) {
         setTimeout(function () {
+            console.log("INDEX SCRIPT MY INTERVAL");
             console.log("--HIDEURL DAYGRID-----ENTRA A INDEX HIDEURL|||||||||");
             let anchorclass = document.getElementsByClassName("fc-daygrid-event");
             for (var en = 0; en < anchorclass.length; en++) {
@@ -466,6 +468,7 @@ function myInterval() {
             }
         }, 15);
     } else {
+        console.log("INDEX SCRIPT MY INTERVAL");
         console.log("--HIDEURL LIST-----ESTA LLAMANDO HIDEURL EVENT");
         let listanchorclass = document.getElementsByClassName("fc-event-forced-url");
         setTimeout(function () {

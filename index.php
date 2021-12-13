@@ -12,7 +12,7 @@
     <link href='<?= $dir; ?>lib/main.min.css' rel='stylesheet' />
     <link href='<?= $dir; ?>packages/bootstrap/css/bootstrap.min.css' rel='stylesheet' />
     <link href="<?= $dir; ?>packages/jqueryui/custom-theme/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
-    <link href='<?= $dir; ?>packages/datepicker/datepicker.css' rel='stylesheet' />
+    <link href='<?= $dir; ?>packages/datepicker/datepicker.min.css' rel='stylesheet' />
     <link href='<?= $dir; ?>packages/colorpicker/bootstrap-colorpicker.min.css' rel='stylesheet' />
     <link href='<?= $dir; ?>style.css' rel='stylesheet' />
     <!-- Scripts -->
@@ -263,9 +263,7 @@
                 T1Obj.attachEvent('onscroll', getScroll); /* Set the function on event to Header */
                 T2Obj.attachEvent('onscroll', getScroll); /* Set the function on event to Body */
             }
-        } else {
-            //CARRY ON NOTHING TO DO HERE
-        }
+        } else {} //CARRY ON NOTHING TO DO HERE
         // --------
         for (let index = 0; index < botones.length; index++) {
             botones[index].setAttribute("id", "b" + index);
@@ -366,7 +364,7 @@
 </script>
 <!-- / .Load Script -->
 
-<script src='<?= $dir; ?>packages/datepicker/datepicker.js'></script>
+<script src='<?= $dir; ?>packages/datepicker/datepicker.min.js'></script>
 <script src='<?= $dir; ?>packages/colorpicker/bootstrap-colorpicker.min.js'></script>
 <script src='<?= $dir; ?>lib/locales-all.min.js'></script>
 
