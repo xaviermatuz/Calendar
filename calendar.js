@@ -10,6 +10,7 @@ function setCookie(cname, cvalue, exdays) {
 document.addEventListener("DOMContentLoaded", function () {
     //Path to root for ez variable declaration
     var url = "./";
+    //var PBX_Language = getCookie("vpbx_user_locale").split("_")[0]; de llegarse a implementar el i18n cambiar los mensajes de error a cliente
     var localeSelectorEl = document.getElementById("locale-selector"); //Assign from the view to the js controler of the locale selector
     var timeZoneSelectorEl = document.getElementById("time-zone-selector"); //Assign from the view to the js controler of the timezone selector
     var eR_DateLocal = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}/; //RegEx used to validate the date on local format with ISO8086 "YYYY-MM-DDTHH:MM:SS-GMT"
@@ -75,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 30);
         }
     }
-
     //Trigguers the Date-Time Picker Box on creation
     $("body").on("click", ".datetimepicker", function () {
         hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
@@ -111,16 +111,27 @@ document.addEventListener("DOMContentLoaded", function () {
     //Delete form and action to button
     $("#deleteEvent").on("click", function () {
         eedid = document.getElementById("editEventId").value; // Set value of editEventId to variable
-        $.ajax({
-            url: url + "api/delete.php",
-            type: "POST",
-            data: { id: eedid },
-            success: function () {
-                $("deleteEvent").removeAttr("data-id"); // If call return succes remove current Id from the view
-                calendar.refetchEvents(); // Refresh calendar
-                hideurl_Timeout_Interval(); //Call to Timeout function to Hiide URL's
+        fetch(url + "api/delete.php", {
+            method: "POST",
+            headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json",
             },
-        }); //We set an event to the delete action button and proceed to delete from the db the event
+            body: JSON.stringify(eedid),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                if (response.success == true) {
+                    $("deleteEvent").removeAttr("data-id"); // If call return succes remove current Id from the view
+                    calendar.refetchEvents(); // Refresh calendar
+                    hideurl_Timeout_Interval(); //Call to Timeout function to Hiide URL's
+                } else {
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            }); //We set an event to the delete action button and proceed to delete from the db the event
         $("#deleteeventmodal").modal("hide"); //Close Delete Event Modal
         $("#editeventmodal").modal("hide"); //Close Edit Event Modal
         calendar.refetchEvents(); // Refresh calendar
@@ -169,11 +180,18 @@ document.addEventListener("DOMContentLoaded", function () {
             arg.event.end == null //If the end date is null we set the same start date to avoid exceptions
                 ? (end = start) // If we didn't found any value for end set the start ones
                 : (end = arg.event.end.toDateString() + " " + arg.event.end.getHours() + ":" + arg.event.end.getMinutes() + ":" + arg.event.end.getSeconds()); //Initial timezone for the calendar to render.
-            $.ajax({
-                url: url + "api/update.php",
-                type: "POST",
-                data: { id: arg.event.id, start: start, end: end },
-            }); //Here we performed an update to the db
+            fetch(url + "api/update.php", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: arg.event.id, start: start, end: end }),
+            })
+                .then((response) => response.json())
+                .catch((error) => {
+                    console.error("Error:", error);
+                }); //Here we performed an update to the db
             hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
         },
         //Actions to take on resize
@@ -182,15 +200,24 @@ document.addEventListener("DOMContentLoaded", function () {
             var start = arg.event.start.toDateString() + " " + arg.event.start.getHours() + ":" + arg.event.start.getMinutes() + ":" + arg.event.start.getSeconds(); // We get from the view the values of start time
             //Set the value and format of End date
             var end = arg.event.end.toDateString() + " " + arg.event.end.getHours() + ":" + arg.event.end.getMinutes() + ":" + arg.event.end.getSeconds(); // We get from the view the values of end time
-            $.ajax({
-                url: url + "api/update.php",
-                type: "POST",
-                data: { id: arg.event.id, start: start, end: end },
-            }); //Here we performed an update to the db
+            fetch(url + "api/update.php", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: arg.event.id, start: start, end: end }),
+            })
+                .then((response) => response.json())
+                .catch((error) => {
+                    console.error("Error:", error);
+                }); //Here we performed an update to the db
             hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
         },
         //Actions to take on event click
         eventClick: function (arg) {
+            $(".form-group").removeClass("has-error"); // Remove the error class
+            $(".help-block").remove(); // Remove the error text
             arg.jsEvent.preventDefault(); // Don't let the browser navigate
             //If we found the declared url proceed to handle the events
             if (arg.event.url) {
@@ -213,20 +240,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     $("#editEventId").val(id); //Id to view
                     $("#deleteEvent").attr("data-id", id); //Set id to delete action
 
-                    $.ajax({
-                        url: url + "api/getevent.php",
-                        type: "POST",
-                        dataType: "json",
-                        data: { id: id },
-                        success: function (data) {
-                            $("#editEventTitle").val(data.title);
-                            $("#editStartDate").val(data.start);
-                            $("#editEndDate").val(data.end);
-                            $("#editColor").val(data.color);
-                            $("#editTextColor").val(data.textColor);
-                            $("#editeventmodal").modal();
+                    fetch(url + "api/getevent.php", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json, text/plain, */*",
+                            "Content-Type": "application/json",
                         },
-                    }); //Here we fetch from the db
+                        body: JSON.stringify({ id: id }),
+                    })
+                        .then((response) => response.json())
+                        .then(function (response) {
+                            if (response.success == true) {
+                                $("#editEventTitle").val(response.title);
+                                $("#editStartDate").val(response.start);
+                                $("#editEndDate").val(response.end);
+                                $("#editColor").val(response.color);
+                                $("#editTextColor").val(response.textColor);
+                                $("#editeventmodal").modal();
+                            } else {
+                                alert("OOPS a ocurrido un error en la solicitud");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                        }); //Here we fetch from the db
                     calendar.refetchEvents(); // Refresh calendar
                     hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
                 }
@@ -235,21 +272,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 var id = arg.event.id; //Id of the event from db
                 $("#editEventId").val(id); //Id to view
                 $("#deleteEvent").attr("data-id", id); //Set id to delete action
-
-                $.ajax({
-                    url: url + "api/getevent.php",
-                    type: "POST",
-                    dataType: "json",
-                    data: { id: id },
-                    success: function (data) {
-                        $("#editEventTitle").val(data.title);
-                        $("#editStartDate").val(data.start);
-                        $("#editEndDate").val(data.end);
-                        $("#editColor").val(data.color);
-                        $("#editTextColor").val(data.textColor);
-                        $("#editeventmodal").modal();
+                fetch(url + "api/getevent.php", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json, text/plain, */*",
+                        "Content-Type": "application/json",
                     },
-                }); //Here we fetch from the db
+                    body: JSON.stringify({ id: id }),
+                })
+                    .then((response) => response.json())
+                    .then(function (response) {
+                        if (response.success == true) {
+                            $("#editEventTitle").val(response.title);
+                            $("#editStartDate").val(response.start);
+                            $("#editEndDate").val(response.end);
+                            $("#editColor").val(response.color);
+                            $("#editTextColor").val(response.textColor);
+                            $("#editeventmodal").modal();
+                        } else {
+                            alert("OOPS a ocurrido un error en la solicitud");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    }); //Here we fetch from the db
                 calendar.refetchEvents(); // Refresh calendar
                 hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
             }
@@ -332,40 +378,49 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Stop the form from refreshing the page
         $(".form-group").removeClass("has-error"); // Remove the error class
         $(".help-block").remove(); // Remove the error text
-
         // Process the form
-        $.ajax({
-            type: "POST",
-            url: url + "api/insert.php",
-            data: $(this).serialize(),
-            dataType: "json",
-            encode: true,
-        }).done(function (data) {
-            if (data.success) {
-                // If Insertion worked
-                $("#createEvent").trigger("reset"); // Remove any form data
-                $("#addeventmodal").modal("hide"); // Close model
-                calendar.refetchEvents(); // Refresh calendar
-                hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
-            } else {
-                if (data.errors.start) {
-                    // If error exist update the html
-                    $("#start-date-group").addClass("has-error"); // Insert the error class
-                    $("#start-date-group").append('<div class="help-block">' + data.errors.start + "</div>"); // Insertion of the message error for date to the view
+        const data = new FormData(event.target);
+        const values = Object.fromEntries(data.entries());
+
+        fetch(url + "api/insert.php", {
+            method: "POST",
+            headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                if (response.success == true) {
+                    // If Insertion worked
+                    $("#createEvent").trigger("reset"); // Remove any form data
+                    $("#addeventmodal").modal("hide"); // Close model
+                    calendar.refetchEvents(); // Refresh calendar
+                    hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
+                } else {
+                    if (response.errors["start"]) {
+                        // If error exist update the html
+                        $("#start-date-group").addClass("has-error"); // Insert the error class
+                        $("#start-date-group").append('<div class="help-block">' + response.errors["start"] + "</div>"); // Insertion of the message error for date to the view
+                    }
+                    if (response.errors["end"]) {
+                        // If error exist update the html
+                        $("#end-date-group").addClass("has-error"); // Insert the error class
+                        $("#end-date-group").append('<div class="help-block">' + response.errors["end"] + "</div>"); // Insertion of the message error for date to the view
+                    }
+                    if (response.errors["title"]) {
+                        // If error exist update the html
+                        $("#title-group").addClass("has-error"); // Insert the error class
+                        $("#title-group").append('<div class="help-block">' + response.errors["title"] + "</div>"); // Insertion of the message error for title to the view
+                    }
+                    hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
                 }
-                if (data.errors.end) {
-                    // If error exist update the html
-                    $("#end-date-group").addClass("has-error"); // Insert the error class
-                    $("#end-date-group").append('<div class="help-block">' + data.errors.end + "</div>"); // Insertion of the message error for date to the view
-                }
-                if (data.errors.title) {
-                    // If error exist update the html
-                    $("#title-group").addClass("has-error"); // Insert the error class
-                    $("#title-group").append('<div class="help-block">' + data.errors.title + "</div>"); // Insertion of the message error for title to the view
-                }
-                hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
-            }
-        });
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     }); //Create Event Submit Handler
 
     $("#editEvent").submit(function (event) {
@@ -374,58 +429,76 @@ document.addEventListener("DOMContentLoaded", function () {
         $(".help-block").remove(); // Remove the error text
 
         //Form data
-        var id = $("#editEventId").val();
-        var title = $("#editEventTitle").val();
-        var start = $("#editStartDate").val();
-        var end = $("#editEndDate").val();
-        var color = $("#editColor").val();
-        var textColor = $("#editTextColor").val();
+        var idf = $("#editEventId").val();
+        var titlef = $("#editEventTitle").val();
+        var startf = $("#editStartDate").val();
+        var endf = $("#editEndDate").val();
+        var colorf = $("#editColor").val();
+        var textColorf = $("#editTextColor").val();
 
         // Process the form
-        $.ajax({
-            type: "POST",
-            url: url + "api/update.php",
-            data: {
-                id: id,
-                title: title,
-                start: start,
-                end: end,
-                color: color,
-                text_color: textColor,
+        fetch(url + "api/update.php", {
+            method: "POST",
+            headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json",
             },
-            dataType: "json",
-            encode: true,
-        }).done(function (data) {
-            if (data.success) {
-                // Insertion worked
-                $("#editEvent").trigger("reset"); // Remove any form data
-                $("#editeventmodal").modal("hide"); // Close model
-                calendar.refetchEvents(); // Refresh calendar
-                hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
-            } else {
-                if (data.errors.start) {
-                    // If error exist update the html
-                    $("#start-date-group").addClass("has-error"); // Insert the error class
-                    $("#start-date-group").append('<div class="help-block">' + data.errors.start + "</div>"); // Insertion of the message error for date to the view
+            body: JSON.stringify({ id: idf, title: titlef, start: startf, end: endf, color: colorf, text_color: textColorf }),
+        })
+            .then((response) => response.json())
+            .then(function (response) {
+                if (response.success == true) {
+                    // Insertion worked
+                    $("#editEvent").trigger("reset"); // Remove any form data
+                    $("#editeventmodal").modal("hide"); // Close model
+                    calendar.refetchEvents(); // Refresh calendar
+                    hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
+                } else {
+                    if (response.errors.start != null) {
+                        // If error exist update the html
+                        $("#edit-startdate-group").addClass("has-error"); // Insert the error class
+                        $("#edit-startdate-group").append('<div class="help-block">' + response.errors.start + "</div>"); // Insertion of the message error for date to the view
+                    }
+                    if (response.errors.end != null) {
+                        // If error exist update the html
+                        $("#edit-enddate-group").addClass("has-error"); // Insert the error class
+                        $("#edit-enddate-group").append('<div class="help-block">' + response.errors.end + "</div>"); // Insertion of the message error for date to the view
+                    }
+                    if (response.errors.title != null) {
+                        // If error exist update the html
+                        $("#edit-title-group").addClass("has-error"); // Insert the error class
+                        $("#edit-title-group").append('<div class="help-block">' + response.errors.title + "</div>"); // Insertion of the message error for title to the view
+                    }
+                    hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
                 }
-                if (data.errors.end) {
-                    // If error exist update the html
-                    $("#end-date-group").addClass("has-error"); // Insert the error class
-                    $("#end-date-group").append('<div class="help-block">' + data.errors.end + "</div>"); // Insertion of the message error for date to the view
-                }
-                if (data.errors.title) {
-                    // If error exist update the html
-                    $("#title-group").addClass("has-error"); // Insert the error class
-                    $("#title-group").append('<div class="help-block">' + data.errors.title + "</div>"); // Insertion of the message error for title to the view
-                }
-                hideurl_Timeout_Interval(); //Call to Timeout function to Hide URL's
-            }
-        });
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            }); //Here we fetch from the db
         return false;
         //
     }); //Edit Event Submit Handler
 });
 
+//Function to do the fetch with POST
+async function postData(url = "", datos = {}) {
+    // *starred options in comments are default values
+    const response = await fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "same-origin", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+            Accept: "application/json, text/plain, */*", // expected data sent back "application/json, text/plain, */*"
+            "Content-Type": "application/json", // Sent request
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(datos), // body data type must match "Content-Type" header
+    });
+
+    return response.json(); // parses JSON response into native JavaScript objects
+}
 // Function to hide the URL's in the table
 function myInterval() {
     console.log("INDEX SCRIPT MY INTERVAL");

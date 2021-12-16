@@ -1,18 +1,21 @@
 <?php
 include("../config.php");
 
-if (isset($_POST['id'])) {
+$contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+if ($contentType === "application/json") {
+    $content = trim(file_get_contents("php://input"));
+    $decoded = json_decode($content, true);
 
     //collect data
     $error      = null;
-    $id         = $_POST['id'];
-    $start      = $_POST['start'];
-    $end        = $_POST['end'];
+    $id         = $decoded['id'];
+    $start      = $decoded['start'];
+    $end        = $decoded['end'];
 
     //optional fields
-    $title      = isset($_POST['title']) ? $_POST['title'] : '';
-    $color      = isset($_POST['color']) ? $_POST['color'] : '';
-    $text_color = isset($_POST['text_color']) ? $_POST['text_color'] : '';
+    $title      = isset($decoded['title']) ? $decoded['title'] : '';
+    $color      = isset($decoded['color']) ? $decoded['color'] : '';
+    $text_color = isset($decoded['text_color']) ? $decoded['text_color'] : '';
 
     //validation
     if ($start == '') {
@@ -21,6 +24,10 @@ if (isset($_POST['id'])) {
 
     if ($end == '') {
         $error['end'] = 'End date is required';
+    }
+
+    if ($title == '') {
+        $error['title'] = 'Title is required';
     }
 
     //if there are no errors, carry on
@@ -35,8 +42,8 @@ if (isset($_POST['id'])) {
 
         //set core update array
         $update = [
-            'start_event' => date('Y-m-d H:i:s', strtotime($_POST['start'])),
-            'end_event' => date('Y-m-d H:i:s', strtotime($_POST['end']))
+            'start_event' => date('Y-m-d H:i:s', strtotime($start)),
+            'end_event' => date('Y-m-d H:i:s', strtotime($end))
         ];
 
         //check for additional fields, and add to $update array if they exist
@@ -53,7 +60,7 @@ if (isset($_POST['id'])) {
         }
 
         //set the where condition ie where id = 2
-        $where = ['id' => $_POST['id']];
+        $where = ['id' => $id];
 
         //update database
         $db->update('events', $update, $where);
@@ -63,5 +70,7 @@ if (isset($_POST['id'])) {
         $data['errors'] = $error;
     }
 
-    echo json_encode($data);
+    $resultados = json_encode($data);
+    header("Content-Type: application/json; charset=UTF-8");
+    echo $resultados;
 }

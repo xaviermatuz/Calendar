@@ -6,6 +6,7 @@
     <meta charset='utf-8' />
     <meta name="description" content="Conference Bridge Pro Addon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex" />
     <link rel="icon" href='<?= $dir; ?>favicon.ico'>
     <title>Calendar</title>
     <!-- Styles -->

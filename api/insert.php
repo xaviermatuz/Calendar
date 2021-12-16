@@ -1,15 +1,17 @@
 <?php
 include("../config.php");
 
-if (isset($_POST['title'])) {
-
+$contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+if ($contentType === "application/json") {
+    $content = trim(file_get_contents("php://input"));
+    $decoded = json_decode($content, true);
     //Collect Data
     $error      = null;
-    $title      = $_POST['title'];
-    $start      = $_POST['startDate'];
-    $end        = $_POST['endDate'];
-    $color      = $_POST['color'];
-    $text_color = $_POST['text_color'];
+    $title      = $decoded['title'];
+    $start      = $decoded['startDate'];
+    $end        = $decoded['endDate'];
+    $color      = $decoded['color'];
+    $text_color = $decoded['text_color'];
 
     //Validation
     if ($title == '') {
@@ -47,5 +49,7 @@ if (isset($_POST['title'])) {
         $data['errors'] = $error;
     }
 
-    echo json_encode($data);
+    $resultados = json_encode($data);
+    header("Content-Type: application/json; charset=UTF-8");
+    echo $resultados;
 }
